@@ -2,141 +2,203 @@ import streamlit as st
 import pandas as pd
 import google.generativeai as genai
 
-# Page Configuration (Must be the first Streamlit command)
-st.set_page_config(page_title="Community Hub", page_icon="🌟", layout="wide")
+# Page Configuration
+st.set_page_config(page_title="Community Hub", page_icon="🌱", layout="wide", initial_sidebar_state="collapsed")
 
-# Custom CSS to make it look attractive and colorful
+# Custom CSS for Pinterest-style UI and Bottom Navigation
 st.markdown("""
     <style>
-    .fiverr-card {
-        background-color: #f8f9fa;
+    /* Main Background */
+    .stApp { background-color: #f4f6f8; }
+    
+    /* Hide top header to look more like an app */
+    header {visibility: hidden;}
+    
+    /* Pinterest Style Cards */
+    .pin-card {
+        background-color: white;
+        border-radius: 16px;
         padding: 15px;
-        border-radius: 10px;
-        border-left: 5px solid #1dbf73;
-        box-shadow: 2px 2px 5px rgba(0,0,0,0.1);
-        margin-bottom: 15px;
+        box-shadow: 0 4px 6px rgba(0,0,0,0.05);
+        margin-bottom: 20px;
+        transition: transform 0.3s ease, box-shadow 0.3s ease;
+        text-align: center;
     }
-    .jd-card {
-        background-color: #fff4e6;
-        padding: 15px;
-        border-radius: 10px;
-        border-left: 5px solid #ff7b00;
-        box-shadow: 2px 2px 5px rgba(0,0,0,0.1);
+    .pin-card:hover {
+        transform: translateY(-5px);
+        box-shadow: 0 10px 15px rgba(0,0,0,0.1);
+    }
+    .pin-image {
+        width: 100%;
+        border-radius: 12px;
+        margin-bottom: 10px;
+        object-fit: cover;
+        height: 150px;
+    }
+    
+    /* JustDial Style Directory Cards */
+    .dir-card {
+        background-color: white;
+        border-radius: 12px;
+        padding: 20px;
+        box-shadow: 0 2px 4px rgba(0,0,0,0.05);
         margin-bottom: 15px;
+        border-left: 6px solid #ff4b4b;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+    }
+    
+    /* Chatbot Bubble */
+    .chat-bubble {
+        background-color: #e3f2fd;
+        border-radius: 15px 15px 15px 0px;
+        padding: 15px;
+        margin: 10px 0;
+        color: #0d47a1;
+        font-weight: 500;
     }
     </style>
 """, unsafe_allow_html=True)
 
-# Main Title
-st.title("🌟 Community Economic Development Hub")
-st.write("Empowering local artisans, businesses, and individuals.")
+# App Title & Navigation (Using Tabs to simulate app navigation)
+st.markdown("<h1 style='text-align: center; color: #ff4b4b;'>🌱 Community Hub</h1>", unsafe_allow_html=True)
 
-# Create the Navigation Tabs
-tab1, tab2, tab3 = st.tabs(["🛒 Marketplace (Fiverr style)", "📍 Local Pros (JustDial style)", "🤖 Financial Advisor (AI)"])
+# Navigation Tabs
+home_tab, search_tab, learn_tab, profile_tab = st.tabs(["🏠 Home (Marketplace)", "🔍 Search (Local Pros)", "💡 Learn (AI)", "👤 Profile"])
 
 # ---------------------------------------------------------
-# TAB 1: FIVERR STYLE MARKETPLACE
+# TAB 1: HOME (Fiverr/Pinterest Style Skill-Sharing)
 # ---------------------------------------------------------
-with tab1:
-    st.header("Freelance & Artisan Marketplace")
-    st.write("Hire local talent for your projects or buy handmade goods.")
+with home_tab:
+    st.markdown("### ✨ Discover Local Talent & Goods")
     
-    # Category Filter
-    category = st.radio("Select Category:", ["All", "Graphic Design", "Handicrafts", "Web Development"], horizontal=True)
+    # Category chips
+    st.write("**Trending:** 🎨 Art | 👗 Tailoring | 💻 Tech | 🍰 Baking")
+    st.divider()
     
-    col1, col2, col3 = st.columns(3)
+    # Pinterest Grid using Streamlit Columns
+    col1, col2, col3, col4 = st.columns(4)
     
     with col1:
         st.markdown("""
-        <div class="fiverr-card">
-            <h4>🎨 Custom Logo Design</h4>
-            <p><b>By:</b> Sarah Jen</p>
-            <p>⭐ 4.9 (120 reviews)</p>
-            <p><i>Starts at ₹500</i> | ⚡ 2 Day Delivery</p>
+        <div class="pin-card">
+            <img src="https://picsum.photos/400/300?random=1" class="pin-image">
+            <h4 style="margin:0;">Hand-woven Baskets</h4>
+            <p style="color:gray; font-size:14px; margin:5px 0;">By: Ananya Crafts</p>
+            <p style="font-weight:bold; color:#1dbf73; margin:0;">₹450</p>
         </div>
         """, unsafe_allow_html=True)
-        st.button("Hire Sarah", key="btn1")
+        st.button("Buy Now", key="buy1", use_container_width=True)
 
     with col2:
         st.markdown("""
-        <div class="fiverr-card">
-            <h4>🏺 Hand-Painted Pottery</h4>
-            <p><b>By:</b> Rahul Crafts</p>
-            <p>⭐ 4.8 (85 reviews)</p>
-            <p><i>Starts at ₹800</i> | 📦 Free Local Shipping</p>
+        <div class="pin-card">
+            <img src="https://picsum.photos/400/300?random=2" class="pin-image">
+            <h4 style="margin:0;">Custom Embroidery</h4>
+            <p style="color:gray; font-size:14px; margin:5px 0;">By: Sarah Tailors</p>
+            <p style="font-weight:bold; color:#1dbf73; margin:0;">₹800</p>
         </div>
         """, unsafe_allow_html=True)
-        st.button("Buy from Rahul", key="btn2")
+        st.button("Hire Sarah", key="buy2", use_container_width=True)
 
     with col3:
         st.markdown("""
-        <div class="fiverr-card">
-            <h4>💻 Basic Website Setup</h4>
-            <p><b>By:</b> Techies Local</p>
-            <p>⭐ 5.0 (42 reviews)</p>
-            <p><i>Starts at ₹2500</i> | ⚡ 5 Day Delivery</p>
+        <div class="pin-card">
+            <img src="https://picsum.photos/400/300?random=3" class="pin-image">
+            <h4 style="margin:0;">Homemade Pickles</h4>
+            <p style="color:gray; font-size:14px; margin:5px 0;">By: Raju's Kitchen</p>
+            <p style="font-weight:bold; color:#1dbf73; margin:0;">₹200</p>
         </div>
         """, unsafe_allow_html=True)
-        st.button("Hire Techies", key="btn3")
+        st.button("Order Fresh", key="buy3", use_container_width=True)
+        
+    with col4:
+        st.markdown("""
+        <div class="pin-card">
+            <img src="https://picsum.photos/400/300?random=4" class="pin-image">
+            <h4 style="margin:0;">Phone Repair</h4>
+            <p style="color:gray; font-size:14px; margin:5px 0;">By: Tech Guru</p>
+            <p style="font-weight:bold; color:#1dbf73; margin:0;">Starts at ₹500</p>
+        </div>
+        """, unsafe_allow_html=True)
+        st.button("Book Repair", key="buy4", use_container_width=True)
 
 # ---------------------------------------------------------
-# TAB 2: JUSTDIAL STYLE LOCAL PROS
+# TAB 2: SEARCH (JustDial Style Local Directory)
 # ---------------------------------------------------------
-with tab2:
-    st.header("Local Business Directory")
+with search_tab:
+    st.markdown("### 📍 Find Trusted Local Services")
     
     # Search Bar
-    search_query = st.text_input("🔍 What service are you looking for? (e.g., Plumber, Electrician, Tutor)")
+    search_query = st.text_input("What do you need help with? (e.g., Plumber, Tutor, Electrician)", placeholder="Type a service...")
     
-    # Quick Categories
-    st.write("**Popular Categories:** 🔧 Repair | 🧹 Cleaning | 📚 Education | 🍎 Groceries")
-    st.divider()
-
-    # Mock Database using Pandas for a clean table look
-    business_data = pd.DataFrame({
-        "Business Name": ["Sharma Electricals", "QuickFix Plumbing", "City Tutors", "Green Grocers"],
-        "Category": ["Electrician", "Plumber", "Education", "Groceries"],
-        "Rating": ["⭐⭐⭐⭐½", "⭐⭐⭐⭐", "⭐⭐⭐⭐⭐", "⭐⭐⭐⭐"],
-        "Contact": ["+91 9876543210", "+91 9876543211", "+91 9876543212", "+91 9876543213"],
-        "Location": ["Downtown", "North Side", "West End", "Downtown"]
-    })
+    # Mock Database
+    businesses = [
+        {"name": "QuickFix Plumbing", "cat": "Plumber", "rating": "⭐⭐⭐⭐", "phone": "📞 +91 98765 43210"},
+        {"name": "City Bright Tutors", "cat": "Education", "rating": "⭐⭐⭐⭐⭐", "phone": "📞 +91 98765 43211"},
+        {"name": "Spark Electricians", "cat": "Electrician", "rating": "⭐⭐⭐⭐", "phone": "📞 +91 98765 43212"}
+    ]
     
-    # Display the directory attractively
-    for index, row in business_data.iterrows():
+    for biz in businesses:
         st.markdown(f"""
-        <div class="jd-card">
-            <h3 style="margin:0; color:#ff7b00;">{row['Business Name']}</h3>
-            <p style="margin:0;"><b>{row['Category']}</b> | {row['Location']}</p>
-            <p style="margin:0;">{row['Rating']} | 📞 {row['Contact']}</p>
+        <div class="dir-card">
+            <div>
+                <h3 style="margin:0; color:#333;">{biz['name']}</h3>
+                <p style="margin:0; color:gray;">{biz['cat']} | {biz['rating']}</p>
+            </div>
+            <div>
+                <h4 style="margin:0; color:#ff4b4b;">{biz['phone']}</h4>
+            </div>
         </div>
         """, unsafe_allow_html=True)
 
 # ---------------------------------------------------------
-# TAB 3: AI FINANCIAL LITERACY BOT
+# TAB 3: LEARN (AI Financial Literacy)
 # ---------------------------------------------------------
-with tab3:
-    st.header("🤖 Simple Financial Advisor")
-    st.info("Ask me anything about saving money, starting a small business, or managing debt. I explain things simply!")
-
-    # Check if the API key is in Streamlit Secrets
+with learn_tab:
+    st.markdown("### 💡 Financial Helper")
+    st.markdown("<p style='color:gray;'>Ask me anything about money, savings, or business. I use simple stories to explain!</p>", unsafe_allow_html=True)
+    
     if "GEMINI_API_KEY" in st.secrets:
         genai.configure(api_key=st.secrets["GEMINI_API_KEY"])
         model = genai.GenerativeModel('gemini-1.5-flash')
         
-        user_question = st.text_area("What is your financial question?")
+        user_question = st.text_area("Write your question here:", placeholder="Example: What is an interest rate? Or, how do I save money from my shop?")
         
-        if st.button("Ask AI ✨"):
+        if st.button("Ask AI ✨", type="primary"):
             if user_question:
-                with st.spinner("Thinking..."):
-                    # We tell the AI to speak simply
-                    prompt = f"Explain this financial concept to someone with no financial background using simple words and analogies. Question: {user_question}"
+                with st.spinner("Thinking of a simple story for you..."):
+                    # Custom prompt to force simple, uneducated-friendly language and emojis
+                    prompt = f"""
+                    You are a friendly financial helper for people with no formal education. 
+                    Explain this concept using very simple, everyday words. 
+                    Use a real-life analogy (like farming, cooking, or running a small street stall).
+                    Use emojis to make it visual and easy to read.
+                    Do not use big financial jargon.
+                    
+                    User's Question: {user_question}
+                    """
                     response = model.generate_content(prompt)
-                    st.success("Here is your answer:")
-                    st.write(response.text)
+                    
+                    st.markdown(f"""
+                    <div class="chat-bubble">
+                        {response.text}
+                    </div>
+                    """, unsafe_allow_html=True)
             else:
-                st.warning("Please type a question first.")
+                st.warning("Please type a question first!")
     else:
-        st.error("⚠️ API Key not found! Please add your GEMINI_API_KEY to Streamlit Secrets to use the AI chatbot.")
-        st.write("For now, here is a preview of how the chat looks:")
-        st.text_area("What is your financial question?", disabled=True)
-        st.button("Ask AI ✨", disabled=True)
+        st.error("⚠️ AI is resting! Please add your GEMINI_API_KEY to Streamlit Settings -> Secrets.")
+        st.info("Example Answer Preview: Think of an interest rate like planting a seed. If you give the bank your seed (money), they water it for you, and it grows extra leaves (interest) over time!")
+
+# ---------------------------------------------------------
+# TAB 4: PROFILE
+# ---------------------------------------------------------
+with profile_tab:
+    st.markdown("### 👤 My Profile")
+    st.write("**Name:** Community Member")
+    st.write("**Saved Items:** 3 items")
+    st.write("**Wallet Balance:** ₹1,200")
+    st.button("⚙️ Settings")
+    st.button("🚪 Logout")
