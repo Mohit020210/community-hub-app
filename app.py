@@ -144,22 +144,36 @@ with search_tab:
     businesses = [
         {"name": "QuickFix Plumbing", "cat": "Plumber", "rating": "⭐⭐⭐⭐", "phone": "📞 +91 98765 43210"},
         {"name": "City Bright Tutors", "cat": "Education", "rating": "⭐⭐⭐⭐⭐", "phone": "📞 +91 98765 43211"},
-        {"name": "Spark Electricians", "cat": "Electrician", "rating": "⭐⭐⭐⭐", "phone": "📞 +91 98765 43212"}
+        {"name": "Spark Electricians", "cat": "Electrician", "rating": "⭐⭐⭐⭐", "phone": "📞 +91 98765 43212"},
+        {"name": "Raju's Hardware", "cat": "Plumber", "rating": "⭐⭐⭐", "phone": "📞 +91 98765 43213"}
     ]
     
-    for biz in businesses:
-        st.markdown(f"""
-        <div class="dir-card">
-            <div>
-                <h3 style="margin:0; color:#333;">{biz['name']}</h3>
-                <p style="margin:0; color:gray;">{biz['cat']} | {biz['rating']}</p>
+    # FILTERING LOGIC
+    # If the user typed something, filter the list. Otherwise, show all.
+    if search_query:
+        filtered_businesses = [
+            biz for biz in businesses 
+            if search_query.lower() in biz['name'].lower() or search_query.lower() in biz['cat'].lower()
+        ]
+    else:
+        filtered_businesses = businesses
+        
+    # DISPLAY RESULTS
+    if len(filtered_businesses) == 0:
+        st.warning(f"No results found for '{search_query}'. Try searching for 'Plumber' or 'Electrician'.")
+    else:
+        for biz in filtered_businesses:
+            st.markdown(f"""
+            <div class="dir-card">
+                <div>
+                    <h3 style="margin:0; color:#333;">{biz['name']}</h3>
+                    <p style="margin:0; color:gray;">{biz['cat']} | {biz['rating']}</p>
+                </div>
+                <div>
+                    <h4 style="margin:0; color:#ff4b4b;">{biz['phone']}</h4>
+                </div>
             </div>
-            <div>
-                <h4 style="margin:0; color:#ff4b4b;">{biz['phone']}</h4>
-            </div>
-        </div>
-        """, unsafe_allow_html=True)
-
+            """, unsafe_allow_html=True)
 # ---------------------------------------------------------
 # TAB 3: LEARN (AI Financial Literacy)
 # ---------------------------------------------------------
