@@ -8,8 +8,13 @@ st.set_page_config(page_title="Community Hub", page_icon="🌱", layout="wide", 
 # Custom CSS for Pinterest-style UI and Bottom Navigation
 st.markdown("""
     <style>
-    /* Main Background */
-    .stApp { background-color: #f4f6f8; }
+    /* Main Background & Force Dark Text */
+    .stApp { 
+        background-color: #fdfbf7; 
+    }
+    .stApp, .stApp p, .stApp h1, .stApp h2, .stApp h3, .stApp h4, .stApp h5, .stApp h6, .stApp span {
+        color: #2b2b2b !important; 
+    }
     
     /* Hide top header to look more like an app */
     header {visibility: hidden;}
@@ -23,6 +28,7 @@ st.markdown("""
         margin-bottom: 20px;
         transition: transform 0.3s ease, box-shadow 0.3s ease;
         text-align: center;
+        border: 1px solid #eaeaea;
     }
     .pin-card:hover {
         transform: translateY(-5px);
@@ -47,6 +53,7 @@ st.markdown("""
         display: flex;
         justify-content: space-between;
         align-items: center;
+        border: 1px solid #eaeaea;
     }
     
     /* Chatbot Bubble */
@@ -55,12 +62,12 @@ st.markdown("""
         border-radius: 15px 15px 15px 0px;
         padding: 15px;
         margin: 10px 0;
-        color: #0d47a1;
+        color: #0d47a1 !important;
         font-weight: 500;
+        border: 1px solid #bbdefb;
     }
     </style>
 """, unsafe_allow_html=True)
-
 # App Title & Navigation (Using Tabs to simulate app navigation)
 st.markdown("<h1 style='text-align: center; color: #ff4b4b;'>🌱 Community Hub</h1>", unsafe_allow_html=True)
 
